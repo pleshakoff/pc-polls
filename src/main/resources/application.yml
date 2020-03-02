@@ -1,0 +1,43 @@
+server:
+  servlet:
+     context-path: /api/${parcom.api.version}
+
+parcom:
+  api:
+    version: v1
+  services:
+    -
+      name: classroom
+      host: pc-classroom
+      port: 8080
+      version: v1
+
+spring:
+  application.name: pc-polls
+  hateoas:
+    use-hal-as-default-json-media-type: false
+  datasource:
+    url: jdbc:postgresql://pc-polls-pg:5434/postgres
+    username: postgres
+    password: parcom
+    platform: postgres
+    initialization-mode: always
+    sql-script-encoding: UTF-8
+  jpa:
+    database: postgresql
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+         jdbc:
+          lob:
+            non_contextual_creation: true
+management:
+  endpoints:
+    metrics:
+      enabled: true
+    web:
+      exposure:
+        include: "health,prometheus"
