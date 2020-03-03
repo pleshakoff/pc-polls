@@ -8,8 +8,6 @@ interface VariantService {
 
     List<Variant> all(Long idPoll);
 
-
-    @Secured({"ROLE_ADMIN","ROLE_MEMBER"})
     Variant create(VariantDto variantDto);
 
     @Secured({"ROLE_ADMIN","ROLE_MEMBER"})

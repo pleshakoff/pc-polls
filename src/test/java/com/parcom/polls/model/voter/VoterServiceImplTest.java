@@ -1,4 +1,4 @@
-package com.parcom.polls.model.student;
+package com.parcom.polls.model.voter;
 
 import com.parcom.polls.SpringSecurityTestConfiguration;
 import com.parcom.polls.model.group.Group;
@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = {StudentServiceImplTestConfiguration.class,
         SpringSecurityTestConfiguration.class})
-public class StudentServiceImplTest {
+public class VoterServiceImplTest {
 
 
     private static final long ID_STUDENT_ONE = 1L;
@@ -35,7 +35,7 @@ public class StudentServiceImplTest {
     private static final String FAMILY_NAME = "ivanov";
 
     @Autowired
-    StudentService studentService;
+    VoterService voterService;
 
     @MockBean
     StudentRepository studentRepository;
@@ -52,16 +52,16 @@ public class StudentServiceImplTest {
     @Test
     @WithUserDetails("admin@parcom.com")
     public void getById() {
-        Mockito.when(studentRepository.findById(ID_STUDENT_ONE)).thenReturn(of(Student.builder().id(ID_STUDENT_ONE).build()));
-        Student student = studentService.getById(ID_STUDENT_ONE);
-        assertEquals(ID_STUDENT_ONE, student.getId());
+        Mockito.when(studentRepository.findById(ID_STUDENT_ONE)).thenReturn(of(Voter.builder().id(ID_STUDENT_ONE).build()));
+        Voter voter = voterService.getById(ID_STUDENT_ONE);
+        assertEquals(ID_STUDENT_ONE, voter.getId());
     }
 
     @Test
     @WithUserDetails("admin@parcom.com")
     public void getByIdNotFound() {
         assertThrows(NotFoundParcomException.class, () -> {
-            studentService.getById(ID_STUDENT_ONE);
+            voterService.getById(ID_STUDENT_ONE);
         });
     }
 
@@ -69,9 +69,9 @@ public class StudentServiceImplTest {
     @Test
     @WithUserDetails("admin@parcom.com")
     public void getCurrentStudent() {
-        Mockito.when(studentRepository.findById(ID_STUDENT_ONE)).thenReturn(of(Student.builder().id(ID_STUDENT_ONE).build()));
-        Student student = studentService.getCurrentStudent();
-        assertEquals(ID_STUDENT_ONE, student.getId());
+        Mockito.when(studentRepository.findById(ID_STUDENT_ONE)).thenReturn(of(Voter.builder().id(ID_STUDENT_ONE).build()));
+        Voter voter = voterService.getCurrentStudent();
+        assertEquals(ID_STUDENT_ONE, voter.getId());
     }
 
 
@@ -79,14 +79,14 @@ public class StudentServiceImplTest {
     @WithUserDetails("childFreeMember@parcom.com")
     public void getCurrentStudentForUserWithoutStudent() {
 
-        assertNull(studentService.getCurrentStudent());
+        assertNull(voterService.getCurrentStudent());
     }
 
     @Test
     @WithUserDetails("admin@parcom.com")
     public void getCurrentStudentNotFound() {
         assertThrows(NotFoundParcomException.class, () -> {
-            studentService.getCurrentStudent();
+            voterService.getCurrentStudent();
         });
 
     }
@@ -97,10 +97,10 @@ public class StudentServiceImplTest {
     public void getMyStudents() {
 
         Mockito.when(studentToUserRepository.getMyStudents(ID_USER_ADMIN)).
-                thenReturn(Arrays.asList(Student.builder().id(ID_STUDENT_ONE).build(), Student.builder().id(ID_STUDENT_TWO).build())
+                thenReturn(Arrays.asList(Voter.builder().id(ID_STUDENT_ONE).build(), Voter.builder().id(ID_STUDENT_TWO).build())
                 );
 
-        assertEquals(2, studentService.getMyStudents(null).size());
+        assertEquals(2, voterService.getMyStudents(null).size());
     }
 
     @Test
@@ -108,10 +108,10 @@ public class StudentServiceImplTest {
     public void getMyStudentsByGroup() {
 
         Mockito.when(studentToUserRepository.getMyStudentsInGroup(ID_USER_ADMIN, ID_GROUP_ONE)).
-                thenReturn(Arrays.asList(Student.builder().id(ID_STUDENT_ONE).build(), Student.builder().id(ID_STUDENT_TWO).build())
+                thenReturn(Arrays.asList(Voter.builder().id(ID_STUDENT_ONE).build(), Voter.builder().id(ID_STUDENT_TWO).build())
                 );
 
-        assertEquals(2, studentService.getMyStudents(ID_GROUP_ONE).size());
+        assertEquals(2, voterService.getMyStudents(ID_GROUP_ONE).size());
 
 
     }
@@ -119,26 +119,26 @@ public class StudentServiceImplTest {
     @Test
     public void getMyStudentsByGroupUnauthorised() {
         Mockito.when(studentToUserRepository.getMyStudents(ID_USER_ADMIN)).
-                thenReturn(Arrays.asList(Student.builder().id(ID_STUDENT_ONE).build(), Student.builder().id(ID_STUDENT_TWO).build())
+                thenReturn(Arrays.asList(Voter.builder().id(ID_STUDENT_ONE).build(), Voter.builder().id(ID_STUDENT_TWO).build())
                 );
-        assertEquals(0, studentService.getMyStudents(1L).size());
+        assertEquals(0, voterService.getMyStudents(1L).size());
     }
 
 
     @Test
     @WithUserDetails("admin@parcom.com")
     public void getMyStudent() {
-        Mockito.when(studentRepository.findById(ID_STUDENT_ONE)).thenReturn(of(Student.builder().id(ID_STUDENT_ONE).build()));
-        Student student = studentService.getMyStudent(ID_STUDENT_ONE);
-        assertEquals(ID_STUDENT_ONE, student.getId());
+        Mockito.when(studentRepository.findById(ID_STUDENT_ONE)).thenReturn(of(Voter.builder().id(ID_STUDENT_ONE).build()));
+        Voter voter = voterService.getMyStudent(ID_STUDENT_ONE);
+        assertEquals(ID_STUDENT_ONE, voter.getId());
     }
 
     @Test
     @WithUserDetails("member@parcom.com")
     public void getMyStudentNotFound() {
-        Mockito.when(studentRepository.findById(ID_STUDENT_ONE)).thenReturn(of(Student.builder().id(ID_STUDENT_ONE).build()));
+        Mockito.when(studentRepository.findById(ID_STUDENT_ONE)).thenReturn(of(Voter.builder().id(ID_STUDENT_ONE).build()));
         assertThrows(NotFoundParcomException.class, () -> {
-            studentService.getMyStudent(ID_STUDENT_TWO);
+            voterService.getMyStudent(ID_STUDENT_TWO);
         });
     }
 
@@ -146,9 +146,9 @@ public class StudentServiceImplTest {
     @Test
     @WithUserDetails("parent@parcom.com")
     public void getMyStudentWrongParent() {
-        Mockito.when(studentRepository.findById(ID_STUDENT_ONE)).thenReturn(of(Student.builder().id(ID_STUDENT_ONE).build()));
+        Mockito.when(studentRepository.findById(ID_STUDENT_ONE)).thenReturn(of(Voter.builder().id(ID_STUDENT_ONE).build()));
         assertThrows(NotFoundParcomException.class, () -> {
-            studentService.getMyStudent(ID_STUDENT_ONE);
+            voterService.getMyStudent(ID_STUDENT_ONE);
         });
     }
 
@@ -157,17 +157,17 @@ public class StudentServiceImplTest {
     @WithUserDetails("admin@parcom.com")
     public void getStudents() {
         Mockito.when(studentRepository.getStudentsByGroup(ID_GROUP_ONE)).
-                thenReturn(Arrays.asList(Student.builder().id(ID_STUDENT_ONE).build(), Student.builder().id(ID_STUDENT_TWO).build())
+                thenReturn(Arrays.asList(Voter.builder().id(ID_STUDENT_ONE).build(), Voter.builder().id(ID_STUDENT_TWO).build())
                 );
 
-        assertEquals(2, studentService.getStudents().size());
+        assertEquals(2, voterService.getStudents().size());
     }
 
     @Test
     @WithUserDetails("parent@parcom.com")
     public void getStudentsAccessDenied() {
         assertThrows(AccessDeniedException.class, () ->
-            studentService.getStudents()
+            voterService.getStudents()
         );
     }
 
@@ -175,9 +175,9 @@ public class StudentServiceImplTest {
     @WithUserDetails("fromAnotherGroup@parcom.com")
     public void getStudentsNotMyGroup() {
         Mockito.when(studentRepository.getStudentsByGroup(ID_GROUP_ONE)).
-                thenReturn(Arrays.asList(Student.builder().id(ID_STUDENT_ONE).build(), Student.builder().id(ID_STUDENT_TWO).build())
+                thenReturn(Arrays.asList(Voter.builder().id(ID_STUDENT_ONE).build(), Voter.builder().id(ID_STUDENT_TWO).build())
                 );
-        assertEquals(0, studentService.getStudents().size());
+        assertEquals(0, voterService.getStudents().size());
     }
 
 
@@ -192,22 +192,22 @@ public class StudentServiceImplTest {
         Mockito.when(groupServiceImpl.getCurrentGroup()).
                 thenReturn(group);
 
-        StudentDto studentDTO = StudentDto.builder().
+        VoterDto voterDTO = VoterDto.builder().
                 firstName(FIRST_NAME).
                 middleName(MIDDLE_NAME).
                 familyName(FAMILY_NAME).
                 birthDay(now).build();
 
-       Mockito.when(studentRepository.save(Mockito.any(Student.class))).thenAnswer(i -> i.getArguments()[0]);
+       Mockito.when(studentRepository.save(Mockito.any(Voter.class))).thenAnswer(i -> i.getArguments()[0]);
 
-       Student insertedStudent = studentService.create(studentDTO);
+       Voter insertedVoter = voterService.create(voterDTO);
 
 
         assertAll("creation",
-                () -> assertEquals(FIRST_NAME,insertedStudent.getFirstName()),
-                () -> assertEquals(MIDDLE_NAME,insertedStudent.getMiddleName()),
-                () -> assertEquals(FAMILY_NAME,insertedStudent.getFamilyName()),
-                () -> assertEquals(now,insertedStudent.getBirthDay())
+                () -> assertEquals(FIRST_NAME, insertedVoter.getFirstName()),
+                () -> assertEquals(MIDDLE_NAME, insertedVoter.getMiddleName()),
+                () -> assertEquals(FAMILY_NAME, insertedVoter.getFamilyName()),
+                () -> assertEquals(now, insertedVoter.getBirthDay())
                 );
     }
 
@@ -218,14 +218,14 @@ public class StudentServiceImplTest {
 
         LocalDate now = LocalDate.now();
 
-        StudentDto studentDTO = StudentDto.builder().
+        VoterDto voterDTO = VoterDto.builder().
                 firstName(FIRST_NAME).
                 middleName(MIDDLE_NAME).
                 familyName(FAMILY_NAME).
                 birthDay(now).build();
 
         assertThrows(AccessDeniedException.class, () -> {
-            studentService.create(studentDTO);
+            voterService.create(voterDTO);
         });
     }
 
@@ -235,31 +235,31 @@ public class StudentServiceImplTest {
     public void update() {
         LocalDate now = LocalDate.now().plusDays(1);
 
-        Student student = Student.builder().id(ID_STUDENT_ONE).firstName("1").
+        Voter voter = Voter.builder().id(ID_STUDENT_ONE).firstName("1").
                 middleName("2").
                 familyName("3").
                 birthDay(LocalDate.now()).
                 build();
 
-        Mockito.when(studentRepository.findById(ID_STUDENT_ONE)).thenReturn(of(student));
+        Mockito.when(studentRepository.findById(ID_STUDENT_ONE)).thenReturn(of(voter));
 
-        StudentDto studentDTO = StudentDto.builder().
+        VoterDto voterDTO = VoterDto.builder().
                 firstName(FIRST_NAME).
                 middleName(MIDDLE_NAME).
                 familyName(FAMILY_NAME).
                 birthDay(now).build();
 
 
-        Mockito.when(studentRepository.save(Mockito.any(Student.class))).thenAnswer(i -> i.getArguments()[0]);
+        Mockito.when(studentRepository.save(Mockito.any(Voter.class))).thenAnswer(i -> i.getArguments()[0]);
 
-        Student updatedStudent = studentService.update(ID_STUDENT_ONE,studentDTO);
+        Voter updatedVoter = voterService.update(ID_STUDENT_ONE, voterDTO);
 
 
         assertAll("update",
-                () -> assertEquals(FIRST_NAME,updatedStudent.getFirstName()),
-                () -> assertEquals(MIDDLE_NAME,updatedStudent.getMiddleName()),
-                () -> assertEquals(FAMILY_NAME,updatedStudent.getFamilyName()),
-                () -> assertEquals(now,updatedStudent.getBirthDay())
+                () -> assertEquals(FIRST_NAME, updatedVoter.getFirstName()),
+                () -> assertEquals(MIDDLE_NAME, updatedVoter.getMiddleName()),
+                () -> assertEquals(FAMILY_NAME, updatedVoter.getFamilyName()),
+                () -> assertEquals(now, updatedVoter.getBirthDay())
         );
     }
 
@@ -269,7 +269,7 @@ public class StudentServiceImplTest {
     public void updateWrongId() {
         LocalDate now = LocalDate.now().plusDays(1);
 
-        StudentDto studentDTO = StudentDto.builder().
+        VoterDto voterDTO = VoterDto.builder().
                 firstName(FIRST_NAME).
                 middleName(MIDDLE_NAME).
                 familyName(FAMILY_NAME).
@@ -277,7 +277,7 @@ public class StudentServiceImplTest {
 
 
         assertThrows(NotFoundParcomException.class, () -> {
-            studentService.update(ID_STUDENT_TWO,studentDTO);
+            voterService.update(ID_STUDENT_TWO, voterDTO);
         });
     }
 
@@ -288,14 +288,14 @@ public class StudentServiceImplTest {
 
         LocalDate now = LocalDate.now();
 
-        StudentDto studentDTO = StudentDto.builder().
+        VoterDto voterDTO = VoterDto.builder().
                 firstName(FIRST_NAME).
                 middleName(MIDDLE_NAME).
                 familyName(FAMILY_NAME).
                 birthDay(now).build();
 
         assertThrows(AccessDeniedException.class, () -> {
-            studentService.update(ID_STUDENT_ONE,studentDTO);
+            voterService.update(ID_STUDENT_ONE, voterDTO);
         });
     }
 
@@ -304,16 +304,16 @@ public class StudentServiceImplTest {
     @WithUserDetails("admin@parcom.com")
     public void delete() {
 
-        Student student = Student.builder().id(ID_STUDENT_ONE).build();
-        Mockito.when(studentRepository.findById(ID_STUDENT_ONE)).thenReturn(of(student));
-            studentService.delete(ID_STUDENT_ONE);
+        Voter voter = Voter.builder().id(ID_STUDENT_ONE).build();
+        Mockito.when(studentRepository.findById(ID_STUDENT_ONE)).thenReturn(of(voter));
+            voterService.delete(ID_STUDENT_ONE);
     }
 
     @Test
     @WithUserDetails("admin@parcom.com")
     public void deleteNotFound() {
         assertThrows(NotFoundParcomException.class, () -> {
-            studentService.delete(ID_STUDENT_ONE);
+            voterService.delete(ID_STUDENT_ONE);
         });
     }
 
@@ -321,7 +321,7 @@ public class StudentServiceImplTest {
     @WithUserDetails("parent@parcom.com")
     public void deleteByParent() {
         assertThrows(AccessDeniedException.class, () -> {
-            studentService.delete(ID_STUDENT_ONE);
+            voterService.delete(ID_STUDENT_ONE);
         });
     }
 

@@ -1,17 +1,17 @@
-package com.parcom.polls.model.student;
+package com.parcom.polls.model.voter;
 
 import org.springframework.security.access.annotation.Secured;
 
 import java.util.List;
 
-public interface StudentService {
+public interface VoterService {
 
 
     @Secured({"ROLE_ADMIN","ROLE_MEMBER"})
-    List<Student> all(Long idPoll);
+    List<Voter> all(Long idPoll);
 
     @Secured({"ROLE_ADMIN","ROLE_MEMBER"})
-    Student create(StudentDto studentDto);
+    Voter create(VoterDto voterDto);
 
     @Secured({"ROLE_ADMIN","ROLE_MEMBER"})
     void delete(Long id);

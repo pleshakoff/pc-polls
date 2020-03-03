@@ -1,4 +1,4 @@
-package com.parcom.polls.model.student;
+package com.parcom.polls.model.voter;
 
 
 import lombok.Getter;
@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 
 @RequiredArgsConstructor
 @Getter
-public class StudentDto {
+public class VoterDto {
 
     @NotNull
     private  final Long idPoll;

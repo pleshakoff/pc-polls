@@ -1,8 +1,6 @@
-package com.parcom.polls.model.student;
+package com.parcom.polls.model.voter;
 
 
-import com.parcom.polls.model.variant.Variant;
-import com.parcom.polls.model.variant.VariantDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -16,35 +14,34 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping(value = "/students",produces = {MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(value = "/voters",produces = {MediaType.APPLICATION_JSON_VALUE})
 @Api(tags="Voters for poll")
 @RequiredArgsConstructor
-public class StudentController {
+public class VoterController {
 
-    private final StudentService studentService;
+    private final VoterService voterService;
 
     @GetMapping
     @ApiOperation(value = "Get all variants")
-    public List<Student> all(@RequestParam Long idPoll){
-        return studentService.all(idPoll);
+    public List<Voter> all(@RequestParam Long idPoll){
+        return voterService.all(idPoll);
     }
 
     @PostMapping
     @ApiOperation(value = "Add voter to poll")
-    public Student create(@Valid @RequestBody StudentDto studentDto,
-                               BindingResult bindingResult) throws BindException {
+    public Voter create(@Valid @RequestBody VoterDto voterDto,
+                        BindingResult bindingResult) throws BindException {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
-        return studentService.create(studentDto);
+        return voterService.create(voterDto);
     }
-
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete voter from poll")
     public void delete(@PathVariable Long id)
     {
-        studentService.delete(id);
+        voterService.delete(id);
     }
 
 

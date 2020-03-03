@@ -1,4 +1,4 @@
-package com.parcom.polls.model.student;
+package com.parcom.polls.model.voter;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -16,7 +16,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Student {
+public class Voter {
 
     @Id
     private Long id;

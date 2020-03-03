@@ -1,7 +1,7 @@
 package com.parcom.polls.model.user;
 
 import com.parcom.polls.model.group.GroupToUserRepository;
-import com.parcom.polls.model.student.StudentToUserRepository;
+import com.parcom.polls.model.voter.StudentToUserRepository;
 import com.parcom.network.Network;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -3,7 +3,6 @@ package com.parcom.polls.model.poll;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.http.MediaType;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -33,7 +32,6 @@ public class PollController {
         return pollService.get(id);
     }
 
-
     @PostMapping
     @ApiOperation(value = "Create poll")
     public Poll create(@Valid @RequestBody PollDto pollDto,
@@ -62,14 +60,13 @@ public class PollController {
         return pollService.changeState(id,pollState);
     }
 
+
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete poll")
     public void delete(@PathVariable Long id)
     {
         pollService.delete(id);
     }
-
-
 
 
 

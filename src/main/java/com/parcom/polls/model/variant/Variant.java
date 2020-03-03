@@ -1,11 +1,11 @@
 package com.parcom.polls.model.variant;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.parcom.polls.model.poll.Poll;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.tomcat.jni.Poll;
 
 import javax.persistence.*;
 

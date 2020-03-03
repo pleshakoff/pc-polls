@@ -15,4 +15,6 @@ class PollDto {
     @NotNull
     private final String description;
     private final LocalDateTime expiration;
+    private final PollType pollType;
+
 }

@@ -4,9 +4,9 @@ import com.parcom.polls.SpringSecurityTestConfiguration;
 import com.parcom.polls.model.group.Group;
 import com.parcom.polls.model.group.GroupToUser;
 import com.parcom.polls.model.group.GroupToUserRepository;
-import com.parcom.polls.model.student.Student;
-import com.parcom.polls.model.student.StudentToUser;
-import com.parcom.polls.model.student.StudentToUserRepository;
+import com.parcom.polls.model.voter.Voter;
+import com.parcom.polls.model.voter.StudentToUser;
+import com.parcom.polls.model.voter.StudentToUserRepository;
 import com.parcom.exceptions.ForbiddenParcomException;
 import com.parcom.exceptions.NotFoundParcomException;
 import com.parcom.exceptions.ParcomException;
@@ -97,18 +97,18 @@ class UserServiceImplTest {
 
     @Test
     void addUserToStudent() {
-        Student student = Student.builder().id(ID_STUDENT_ONE).build();
+        Voter voter = Voter.builder().id(ID_STUDENT_ONE).build();
         User user = User.builder().id(ID_USER_ADMIN).build();
-        StudentToUser studentToUser = StudentToUser.builder().student(student).user(user).build();
+        StudentToUser studentToUser = StudentToUser.builder().student(voter).user(user).build();
         Mockito.when(studentToUserRepository.save(studentToUser)).thenReturn(studentToUser);
-        userService.addUserToStudent(student,user);
+        userService.addUserToStudent(voter,user);
     }
 
 
     @Test
     void addUserToStudentNullUser() {
-        Student student = Student.builder().id(ID_STUDENT_ONE).build();
-        assertThrows(ParcomException.class,() ->  userService.addUserToStudent(student,null));
+        Voter voter = Voter.builder().id(ID_STUDENT_ONE).build();
+        assertThrows(ParcomException.class,() ->  userService.addUserToStudent(voter,null));
 
     }
 
