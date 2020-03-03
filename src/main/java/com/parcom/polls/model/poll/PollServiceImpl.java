@@ -3,15 +3,12 @@ package com.parcom.polls.model.poll;
 import com.parcom.exceptions.ForbiddenParcomException;
 import com.parcom.exceptions.NotFoundParcomException;
 import com.parcom.exceptions.ParcomException;
-import com.parcom.polls.model.voter.Voter;
-import com.parcom.polls.model.voter.VoterDto;
-import com.parcom.polls.model.variant.Variant;
-import com.parcom.polls.model.variant.VariantDto;
 import com.parcom.security_client.UserUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -26,21 +23,23 @@ class PollServiceImpl implements PollService {
                 name(pollDto.getName()).
                 description(pollDto.getDescription()).
                 expiration(pollDto.getExpiration()).
-                idUser(UserUtils.getIdUser()).build();
+                idUser(UserUtils.getIdUser()).
+                pollState(PollState.DRAFT).
+                creation(LocalDateTime.now()).
+                pollType(pollDto.getPollType()).
+                build();
         return pollRepository.save(poll);
     }
 
-    private Poll getById(@NotNull Long idPoll) {
+    @Override
+    public Poll getById(@NotNull Long idPoll) {
         return pollRepository.findById(idPoll).orElseThrow(() -> new NotFoundParcomException("poll.not_found"));
     }
 
 
-    @Override
-    public void checkLocked(@NotNull Long idPoll) {
-        checkLocked(getById(idPoll));
-    }
 
-    private void checkLocked(@NotNull Poll poll) {
+    @Override
+    public void checkLocked(@NotNull Poll poll) {
         if (!poll.getPollState().equals(PollState.DRAFT)) {
             throw new ParcomException("poll.locked");
         }
@@ -60,7 +59,7 @@ class PollServiceImpl implements PollService {
 
     @Override
     public void delete(Long id) {
-        checkLocked(id);
+        checkLocked(getById(id));
         pollRepository.deleteById(id);
     }
 

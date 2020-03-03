@@ -55,9 +55,4 @@ public class VariantController {
         variantService.delete(id);
     }
 
-
-
-
-
-
 }

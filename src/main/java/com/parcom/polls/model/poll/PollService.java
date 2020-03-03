@@ -14,7 +14,10 @@ public interface PollService {
     @Secured({"ROLE_ADMIN","ROLE_MEMBER"})
     Poll create(PollDto pollDto);
 
-    void checkLocked(@NotNull Long idPoll);
+
+    Poll getById(@NotNull Long idPoll);
+
+    void checkLocked(@NotNull Poll poll);
 
     @Secured({"ROLE_ADMIN","ROLE_MEMBER"})
     Poll update(Long id, PollDto pollDto);
