@@ -1,8 +1,7 @@
 package com.parcom.polls.model.poll;
 
 import com.parcom.exceptions.ForbiddenParcomException;
-import com.parcom.exceptions.NotFoundParcomException;
-import com.parcom.exceptions.ParcomException;
+import com.parcom.polls.model.voter.VoterService;
 import com.parcom.security_client.UserUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,6 +15,8 @@ import java.util.List;
 class PollServiceImpl implements PollService {
 
     private final PollRepository pollRepository;
+    private final PollCommon pollCommon;
+    private final VoterService voterService;
 
     @Override
     public Poll create(PollDto pollDto) {
@@ -28,28 +29,32 @@ class PollServiceImpl implements PollService {
                 creation(LocalDateTime.now()).
                 pollType(pollDto.getPollType()).
                 build();
-        return pollRepository.save(poll);
+        Poll newPoll = pollRepository.save(poll);
+
+        if (poll.getPollType().equals(PollType.GROUP)) {
+            voterService.createForAllGroup(newPoll);
+        }
+
+        return newPoll;
     }
 
     @Override
     public Poll getById(@NotNull Long idPoll) {
-        return pollRepository.findById(idPoll).orElseThrow(() -> new NotFoundParcomException("poll.not_found"));
+        return pollCommon.getById(idPoll);
     }
 
 
 
     @Override
     public void checkLocked(@NotNull Poll poll) {
-        if (!poll.getPollState().equals(PollState.DRAFT)) {
-            throw new ParcomException("poll.locked");
-        }
+        pollCommon.checkLocked(poll);
     }
 
 
     @Override
     public Poll update(@NotNull Long id, PollDto pollDto) {
-        Poll poll = getById(id);
-        checkLocked(poll);
+        Poll poll = pollCommon.getById(id);
+        pollCommon.checkLocked(poll);
         poll.setName(pollDto.getName());
         poll.setDescription(pollDto.getDescription());
         poll.setExpiration(pollDto.getExpiration());
@@ -59,7 +64,7 @@ class PollServiceImpl implements PollService {
 
     @Override
     public void delete(Long id) {
-        checkLocked(getById(id));
+        pollCommon.checkLocked(pollCommon.getById(id));
         pollRepository.deleteById(id);
     }
 
@@ -74,7 +79,7 @@ class PollServiceImpl implements PollService {
 
     @Override
     public Poll get(Long id) {
-        Poll poll = getById(id);
+        Poll poll = pollCommon.getById(id);
         if (UserUtils.getRole().equals(UserUtils.ROLE_PARENT) && poll.getPollState().equals(PollState.DRAFT)) {
             throw new  ForbiddenParcomException();
         }
@@ -84,10 +89,15 @@ class PollServiceImpl implements PollService {
 
     @Override
     public Poll changeState(Long id, PollState pollState) {
-        Poll poll = getById(id);
+        Poll poll = pollCommon.getById(id);
         poll.setPollState(pollState);
         pollRepository.save(poll);
         return poll;
+    }
+
+    @Override
+    public List<Poll> allMy() {
+        return pollRepository.findMy(UserUtils.getIdStudent());
     }
 
 

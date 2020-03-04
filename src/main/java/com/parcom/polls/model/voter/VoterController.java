@@ -37,6 +37,7 @@ public class VoterController {
         return voterService.create(voterDto);
     }
 
+
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete voter from poll")
     public void delete(@PathVariable Long id)

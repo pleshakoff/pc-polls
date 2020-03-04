@@ -2,12 +2,15 @@ package com.parcom.polls.model.variant;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.parcom.polls.model.poll.Poll;
+import com.parcom.polls.model.student.Student;
+import com.parcom.polls.model.voter.Voter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Data
@@ -27,7 +30,6 @@ public class Variant {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_poll", referencedColumnName = "id", nullable = false)
     private Poll poll;
-
 
 
 }

@@ -2,7 +2,8 @@ package com.parcom.polls.model.variant;
 
 import com.parcom.exceptions.NotFoundParcomException;
 import com.parcom.polls.model.poll.Poll;
-import com.parcom.polls.model.poll.PollService;
+import com.parcom.polls.model.poll.PollCommon;
+import com.parcom.security_client.UserUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,17 +14,19 @@ import java.util.List;
 class VariantServiceImpl implements VariantService {
 
     private final VariantRepository variantRepository;
-    private final PollService pollService;
+    private final PollCommon pollCommon;
 
     @Override
     public List<Variant> all(Long idPoll) {
-        return null;
+        return variantRepository.findByIdPoll(idPoll,UserUtils.getIdGroup());
     }
+
+
 
     @Override
     public Variant create(VariantDto variantDto) {
-        Poll poll = pollService.getById(variantDto.getIdPoll());
-        pollService.checkLocked(poll);
+        Poll poll = pollCommon.getById(variantDto.getIdPoll());
+        pollCommon.checkLocked(poll);
         Variant variant = Variant.builder().poll(poll).
                 num(variantDto.getNum()).
                 description(variantDto.getDescription()).build();
@@ -32,21 +35,22 @@ class VariantServiceImpl implements VariantService {
 
     @Override
     public Variant update(Long id, VariantDto variantDto) {
-        Poll poll = pollService.getById(variantDto.getIdPoll());
-        pollService.checkLocked(poll);
+        Poll poll = pollCommon.getById(variantDto.getIdPoll());
+        pollCommon.checkLocked(poll);
         Variant variant = getVariantById(id);
         variant.setDescription(variantDto.getDescription());
         variant.setNum(variantDto.getNum());
         return variant;
     }
 
-    private Variant getVariantById(Long id) {
-        return variantRepository.findById(id).orElseThrow(() -> new NotFoundParcomException("variant.not_found"));
+    @Override
+    public Variant getVariantById(Long id) {
+        return variantRepository.findByIdAndGroup(id,UserUtils.getIdGroup()).orElseThrow(() -> new NotFoundParcomException("variant.not_found"));
     }
 
     @Override
     public void delete(Long id) {
-        pollService.checkLocked(getVariantById(id).getPoll());
-        variantRepository.deleteById(id);
+        pollCommon.checkLocked(getVariantById(id).getPoll());
+        variantRepository.delete(getVariantById(id));
     }
 }

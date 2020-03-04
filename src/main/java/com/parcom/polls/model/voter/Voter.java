@@ -19,7 +19,11 @@ import javax.persistence.*;
 public class Voter {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Column(nullable = false)
+    private Long idStudent;
 
     @Column(nullable = false)
     private String firstName;
@@ -35,10 +39,11 @@ public class Voter {
     @JoinColumn(name = "id_poll", referencedColumnName = "id", nullable = false)
     private Poll poll;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_variant", referencedColumnName = "id", nullable = true)
+    @JoinColumn(name = "id_variant", referencedColumnName = "id")
     private Variant variant;
+
+
 
 
 }

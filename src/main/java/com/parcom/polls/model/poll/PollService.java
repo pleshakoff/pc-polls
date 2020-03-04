@@ -29,5 +29,5 @@ public interface PollService {
     Poll changeState(Long id, PollState pollState);
 
 
-
+    List<Poll> allMy();
 }

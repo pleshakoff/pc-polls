@@ -26,6 +26,14 @@ public class PollController {
         return pollService.all(pollState);
     }
 
+
+    @GetMapping("/my")
+    @ApiOperation(value = "Get all my polls")
+    public List<Poll> allMy(){
+        return pollService.allMy();
+    }
+
+
     @GetMapping("/{id}")
     @ApiOperation(value = "Get poll by ID")
     public Poll get(@PathVariable Long id)  {
