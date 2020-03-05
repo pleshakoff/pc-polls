@@ -14,6 +14,8 @@ import com.parcom.polls.model.voter.VoterDto;
 import com.parcom.polls.model.voter.VoterService;
 import com.parcom.security_client.UserUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +25,7 @@ import java.util.function.Supplier;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 class SyncServiceImpl implements SyncService {
 
     private final StudentService studentService;
@@ -35,7 +38,7 @@ class SyncServiceImpl implements SyncService {
         List<Student> students = studentService.getGroupStudents();
         List<Poll> polls = pollService.all(PollState.DRAFT);
         polls.addAll(pollService.all(PollState.ACTIVE));
-
+        log.info("Synchronize voters");
         for (Poll poll : polls) {
             List<Voter> voters = voterService.all(poll.getId());
             voters.stream().filter(voter -> students.stream().noneMatch(student -> student.getId().equals(voter.getIdStudent()))).
@@ -45,10 +48,7 @@ class SyncServiceImpl implements SyncService {
                         orElseGet(() -> voterService.createFromStudent(poll,student));
                 voterService.updateFromStudent(voter.getId(),student);
             }
-
-
         }
-
     }
 
 
