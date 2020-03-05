@@ -22,7 +22,7 @@ public class VoterController {
     private final VoterService voterService;
 
     @GetMapping
-    @ApiOperation(value = "Get all variants")
+    @ApiOperation(value = "Get all voters")
     public List<Voter> all(@RequestParam Long idPoll){
         return voterService.all(idPoll);
     }

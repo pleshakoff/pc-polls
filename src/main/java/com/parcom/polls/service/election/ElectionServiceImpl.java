@@ -24,7 +24,7 @@ public class ElectionServiceImpl implements ElectionService {
     public Voter vote(VoteDto voteDto) {
         Variant variant = variantService.getVariantById(voteDto.getIdVariant());
         pollCommon.checkActive(variant.getPoll());
-        return voterService.vote(variant);
+        return voterService.setVote(variant);
     }
 
     @Override

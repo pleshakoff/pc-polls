@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -53,8 +54,9 @@ class VoterServiceImpl implements VoterService {
         return createFromStudent(poll, student);
     }
 
-    private Voter createFromStudent(Poll poll,
-                                    Student student) {
+    @Override
+    public Voter createFromStudent(Poll poll,
+                                   Student student) {
         Voter voter = Voter.builder().familyName(student.getFamilyName()).
                 firstName(student.getFirstName()).
                 middleName(student.getMiddleName()).
@@ -63,6 +65,22 @@ class VoterServiceImpl implements VoterService {
 
         return voterRepository.save(voter);
     }
+
+    @Override
+    public void updateFromStudent(Long id, Student student) {
+        Voter voter = getVoterById(id);
+        if (!(Objects.equals(student.getFamilyName(), voter.getFamilyName()) &&
+              Objects.equals(student.getMiddleName(), voter.getMiddleName()) &&
+              Objects.equals(student.getFirstName(), voter.getFirstName())))
+        {
+            voter.setFamilyName(student.getFamilyName());
+            voter.setMiddleName(student.getMiddleName());
+            voter.setFirstName(student.getFirstName());
+            voterRepository.save(voter);
+        }
+
+    }
+
 
     @Override
     public void createForAllGroup(Poll poll) {
@@ -76,12 +94,18 @@ class VoterServiceImpl implements VoterService {
     @Override
     public void delete(Long id) {
         pollCommon.checkLocked(getVoterById(id).getPoll());
+        deleteUnchecked(id);
+    }
+
+    @Override
+    public void deleteUnchecked(Long id) {
         voterRepository.deleteById(id);
 
     }
 
+
     @Override
-    public Voter vote(Variant variant)
+    public Voter setVote(Variant variant)
     {
         Voter voter = voterRepository.findByStudent(UserUtils.getIdStudent(), variant.getPoll().getId()).orElseThrow(
                 () -> new NotFoundParcomException(
