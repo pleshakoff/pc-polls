@@ -39,6 +39,7 @@ public class Voter {
     @JoinColumn(name = "id_poll", referencedColumnName = "id", nullable = false)
     private Poll poll;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_variant", referencedColumnName = "id")
     private Variant variant;
