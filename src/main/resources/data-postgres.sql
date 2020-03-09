@@ -12,9 +12,9 @@ values (23, 'В спортзале', 3, 1);
 insert into public.voter (id, family_name, first_name, id_student, middle_name, id_poll, id_variant)
 values (33, 'Грейнджер', 'Гермиона', 33, null, 1, null);
 insert into public.voter (id, family_name, first_name, id_student, middle_name, id_poll, id_variant)
-values (31, 'Потер', 'Гарри', 31, null, 1, null);
+values (31, 'Потер', 'Гарри', 31, null, 1, 22);
 insert into public.voter (id, family_name, first_name, id_student, middle_name, id_poll, id_variant)
-values (32, 'Уизли', 'Рон', 32, 'Артурович', 1, null);
+values (32, 'Уизли', 'Рон', 32, 'Артурович', 1, 22);
 
 
 SELECT setval('hibernate_sequence', 100, true);
